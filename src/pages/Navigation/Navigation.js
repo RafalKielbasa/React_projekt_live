@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useLoaderData } from 'react-router-dom'
 
 import { rickSanchez } from 'src/images'
 
-import useLogic from './useMainPage'
 import NavigationWrapper from './NavigationWrapper'
 
 const MainPageContainer = styled.div`
@@ -11,7 +10,7 @@ const MainPageContainer = styled.div`
 `
 
 const Navigation = () => {
-  const { data } = useLogic()
+  const { data } = useLoaderData()
 
   const buttons = data ? Object.keys(data) : []
 

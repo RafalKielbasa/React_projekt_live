@@ -1,15 +1,16 @@
 import React from 'react'
+import { useLoaderData } from 'react-router-dom'
 
-import useLogic from './usePageContent'
 import Tab from './components/Tab'
-import { type } from '@testing-library/user-event/dist/type'
 
 const Lacations = () => {
-  const { data, loading } = useLogic()
+  const {
+    data: { results },
+  } = useLoaderData()
 
   return (
     <div>
-      {data?.map(({ name, dimension, type }) => (
+      {results?.map(({ name, dimension, type }) => (
         <Tab name={name} dimension={dimension} type={type} />
       ))}
     </div>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLoaderData } from 'react-router-dom'
 
 import Tab from './components/Tab'
-import useLogic from './usePageContent'
+import { postData, getColection } from 'src/api/localServer'
 
 const Wrapper = styled.div`
   height: 200px;
@@ -12,7 +13,10 @@ const Wrapper = styled.div`
 
 const Characters = () => {
   const [number, setNumber] = useState(0)
-  const { data, loading } = useLogic()
+
+  const { data } = useLoaderData()
+
+  const { results } = data
 
   const navigate = useNavigate()
 
@@ -23,7 +27,7 @@ const Characters = () => {
   return (
     <>
       <Wrapper>
-        {data?.map(({ name, status }) => (
+        {results?.map(({ name, status }) => (
           <Tab name={name} status={status} />
         ))}
       </Wrapper>

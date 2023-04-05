@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLoaderData } from 'react-router-dom'
 
 import Tab from './components/Tab'
+import { postData } from 'src/api/localServer'
 
 const Lacations = () => {
-  const {
-    data: { results },
-  } = useLoaderData()
+  const { data } = useLoaderData()
+
+  const { results } = data
+
+  useEffect(() => {
+    const sendCollection = async () => postData('locations', results)
+    sendCollection()
+  }, [])
 
   return (
     <div>

@@ -1,11 +1,22 @@
 import { RouterProvider } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { router } from 'src/routes/routes'
 
+import ThemeContextProvider from './context/ThemeContext'
+
 function App() {
+  const queryClient = new QueryClient()
+
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <ThemeContextProvider>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools />
+        </ThemeContextProvider>
+      </QueryClientProvider>
     </>
   )
 }

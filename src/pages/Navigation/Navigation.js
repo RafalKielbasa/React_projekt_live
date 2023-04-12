@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 import { Link, useLoaderData } from 'react-router-dom'
+import { useContext } from 'react'
+
+import { ThemeContext } from 'src/context/ThemeContext'
 
 import { rickSanchez } from 'src/images'
 
@@ -11,6 +14,7 @@ const MainPageContainer = styled.div`
 
 const Navigation = () => {
   const { data } = useLoaderData()
+  const { toggleTheme, isDark } = useContext(ThemeContext)
 
   const buttons = data ? Object.keys(data) : []
 
@@ -25,6 +29,7 @@ const Navigation = () => {
             <button>{button}</button>
           </Link>
         ))}
+        <button onClick={toggleTheme}>{isDark ? 'Light' : 'Dark'}</button>
       </NavigationWrapper>
     </MainPageContainer>
   )

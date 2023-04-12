@@ -1,106 +1,65 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import styled from 'styled-components'
-import { useNavigate, useLoaderData } from 'react-router-dom'
-import { DataGrid } from '@mui/x-data-grid'
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
+import { useEffect, useState, useContext } from 'react'
+import styled, { css } from 'styled-components'
+import { useLoaderData } from 'react-router-dom'
+import { Table, TableBody } from '@mui/material'
 import TextField from '@mui/material/TextField'
 
-import Tab from './components/Tab'
-import { postData, getColection } from 'src/api/localServer'
+import TableRowComponent from 'src/components/Table/TableRowComponent'
+import TableHeadComponent from 'src/components/Table/TableHead'
+import { onlySting } from 'src/helpers/arrayHelpers'
+import { ThemeContext } from 'src/context/ThemeContext'
 
-const Wrapper = styled.div`
-  height: 1000px;
-  display: flex;
-  flex-direction: column;
-`
+const Wrapper = styled('div')(
+  ({ theme }) =>
+    css`
+      display: flex;
+      flex-direction: column;
+      background-color: ${theme.bgColor};
+      color: ${theme.textColor};
+    `
+)
 
 const Characters = () => {
-  const [number, setNumber] = useState(0)
   const [search, setSearch] = useState('')
   const [filteredData, setFilteredData] = useState()
 
-  console.log({ filteredData })
-
   const { data } = useLoaderData()
+  const { theme } = useContext(ThemeContext)
 
   const { results } = data
 
-  const columns = Object.entries(results[0]).map((item) => item[0])
+  const simplyData = onlySting(results)
+
+  const columns =
+    results && Object.entries(simplyData[0]).map((item) => item[0])
 
   useEffect(
     () =>
+      results &&
       setFilteredData(
-        results.filter(
+        simplyData.filter(
           ({ name, species, gender }) =>
-            name.toLowerCase().includes(search) ||
-            species.toLowerCase().includes(search) ||
-            gender.toLowerCase().includes(search)
+            name?.toLowerCase().includes(search) ||
+            species?.toLowerCase().includes(search) ||
+            gender?.toLowerCase().includes(search)
         )
       ),
     [search]
   )
 
-  // const columns = [
-  //   { field: 'id', headerName: 'ID', width: 70 },
-  //   { field: 'firstName', headerName: 'First name', width: 130 },
-  //   { field: 'lastName', headerName: 'Last name', width: 130 },
-  //   {
-  //     field: 'age',
-  //     headerName: 'Age',
-  //     type: 'number',
-  //     width: 90,
-  //   },
-  //   {
-  //     field: 'fullName',
-  //     headerName: 'Full name',
-  //     description: 'This column has a value getter and is not sortable.',
-  //     sortable: false,
-  //     width: 160,
-  //     valueGetter: (params) =>
-  //       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  //   },
-  // ]
-
-  const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   const sendCollection = async () => postData('characters', results)
-  //   sendCollection()
-  // }, [])
-
-  useEffect(() => {
-    if (number > 4) navigate('/')
-  }, [number])
-
   return (
     <>
-      <Wrapper>
+      <Wrapper theme={theme}>
         <TextField onChange={(e) => setSearch(e.target.value)} />
         <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((item) => (
-                <TableCell>{item}</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+          <TableHeadComponent columns={columns} />
           <TableBody>
             {filteredData?.map((item) => (
-              <TableRow>
-                {Object.values(item).map((element) => {
-                  if (typeof element === 'string')
-                    return <TableCell>{element}</TableCell>
-                  return <TableCell>{''}</TableCell>
-                })}
-              </TableRow>
+              <TableRowComponent row={item} />
             ))}
           </TableBody>
         </Table>
       </Wrapper>
-      {/* <button onClick={() => setNumber((prev) => prev + 1)}>
-        Kliknij mnie
-      </button> */}
     </>
   )
 }

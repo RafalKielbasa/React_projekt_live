@@ -12,10 +12,6 @@ export const getButtons = async () => {
 }
 
 export const getData = async (page) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/${page}`)
-    return response
-  } catch (error) {
-    console.error(error)
-  }
+  const response = await axios.get(`${BASE_URL}/${page}`)
+  return response
 }
